@@ -1,1 +1,12 @@
+[
+  {
+    "id": 1,
+    "title": "Заголовок новости",
+    "category": "politics",
+    "date": "20 октября 2023, 15:30",
+    "source": "NewsPortal",
+    "image": "https://example.com/image.jpg",
+    "content": "Полный текст новости..."
+  }
+]
 
