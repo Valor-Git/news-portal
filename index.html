@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewsFlow - Главные новости политики и финансов</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: #2c3e50;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #e30613;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Шапка сайта */
+        header {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            color: #e30613;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        .date-display {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            flex: 0 0 300px;
+        }
+        
+        .search-bar input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            outline: none;
+            width: 100%;
+        }
+        
+        .search-bar button {
+            background: #e30613;
+            color: white;
+            border: none;
+            padding: 11px 15px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+        
+        /* Навигация */
+        nav.main-nav {
+            padding: 15px 0;
+        }
+        
+        nav.main-nav ul {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        nav.main-nav ul li {
+            margin: 0 15px;
+        }
+        
+        nav.main-nav ul li a {
+            font-weight: 500;
+            color: #2c3e50;
+            padding: 5px 0;
+            position: relative;
+            display: inline-block;
+        }
+        
+        nav.main-nav ul li a.active {
+            color: #e30613;
+        }
+        
+        nav.main-nav ul li a.active:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #e30613;
+        }
+        
+        /* Главная новость */
+        .main-news {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 25px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .main-news:hover {
+            transform: translateY(-5px);
+        }
+        
+        .main-news img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+        
+        .main-news-content {
+            padding: 25px;
+        }
+        
+        .news-tag {
+            display: inline-block;
+            background: #e30613;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .tag-politics {
+            background: #e30613;
+        }
+        
+        .tag-finance {
+            background: #27ae60;
+        }
+        
+        .tag-economy {
+            background: #f39c12;
+        }
+        
+        .tag-business {
+            background: #8e44ad;
+        }
+        
+        .news-date {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .main-news-content h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+        
+        .main-news-content p {
+            margin-bottom: 15px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .read-more {
+            display: inline-block;
+            color: #e30613;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+        
+        /* Блок с новостями */
+        .news-section {
+            margin: 30px 0;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e30613;
+            padding-bottom: 10px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            color: #2c3e50;
+        }
+        
+        .view-all {
+            color: #e30613;
+            font-size: 14px;
+        }
+        
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .news-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .news-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .news-card-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .news-card-content h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            flex-grow: 1;
+        }
+        
+        /* Боковая панель с популярными новостями */
+        .sidebar {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        
+        .popular-news-item {
+            display: flex;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        
+        .popular-news-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .popular-news-item img {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+        
+        .popular-news-content h4 {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        /* Подвал */
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 50px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-section h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-section ul li a {
+            color: #ddd;
+        }
+        
+        .footer-section ul li a:hover {
+            color: #fff;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+            color: #aaa;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 992px) {
+            .header-top {
+                flex-wrap: wrap;
+            }
+            
+            .search-bar {
+                order: 3;
+                flex: 0 0 100%;
+                margin-top: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav.main-nav ul li {
+                margin: 5px 10px;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-news img {
+                height: 250px;
+            }
+        }
+        
+        /* Модальное окно для новости */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 2% auto;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 800px;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+        
+        .modal-header {
+            margin-bottom: 20px;
+        }
+        
+        .modal-body img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-body p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        
+        .modal-body h3 {
+            margin: 25px 0 15px;
+            color: #2c3e50;
+        }
+        
+        /* Лоадер */
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .loader i {
+            font-size: 40px;
+            color: #e30613;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Источники новостей */
+        .news-source {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .source-rbc {
+            color: #e30613;
+        }
+        
+        .source-ria {
+            color: #0066cc;
+        }
+        
+        .source-lenta {
+            color: #ff6600;
+        }
+        
+        .source-tass {
+            color: #0033cc;
+        }
+        
+        /* Уведомление */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1001;
+        }
+    </style>
+    
+    <!-- Добавляем Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <!-- Шапка сайта -->
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo"><i class="fas fa-newspaper"></i>NewsFlow</div>
+                <div class="date-display"><i class="far fa-calendar-alt"></i> <span id="current-date">20 октября 2023, пятница</span></div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Поиск новостей..." id="search-input">
+                    <button id="search-button"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+            
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#" class="active" data-category="all"><i class="fas fa-home"></i> Главная</a></li>
+                    <li><a href="#" data-category="politics"><i class="fas fa-landmark"></i> Политика</a></li>
+                    <li><a href="#" data-category="finance"><i class="fas fa-chart-line"></i> Финансы</a></li>
+                    <li><a href="#" data-category="economy"><i class="fas fa-coins"></i> Экономика</a></li>
+                    <li><a href="#" data-category="business"><i class="fas fa-briefcase"></i> Бизнес</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <div class="container">
+        <!-- Главная новость -->
+        <div class="main-news" data-id="1">
+            <img src="https://source.unsplash.com/random/1200x600/?politics,government" alt="Главная новость">
+            <div class="main-news-content">
+                <span class="news-tag tag-politics">Политика</span>
+                <span class="news-date">19 октября 2023, 10:45</span>
+                <h2>Саммит G20: мировые лидеры договорились о новых санкциях и сотрудничестве</h2>
+                <p>Лидеры стран "Большой двадцатки" достигли соглашения о введении новых экономических санкций в ответ на последние геополитические вызовы. Решение было принято после многодневных переговоров в условиях растущей напряженности на международной арене.</p>
+                <div class="news-source source-rbc">Источник: RBC.ru</div>
+                <a href="#" class="read-more">Читать полностью →</a>
+            </div>
+        </div>
+        
+        <!-- Сетка новостей -->
+        <div class="news-section">
+            <div class="section-header">
+                <h2 class="section-title">Последние новости</h2>
+                <a href="#" class="view-all">Все новости →</a>
+            </div>
+            
+            <div class="news-grid" id="news-container">
+                <!-- Новости будут загружены через JavaScript -->
+            </div>
+            
+            <div class="loader" id="news-loader">
+                <i class="fas fa-spinner"></i>
+                <p>Загрузка новостей...</p>
+            </div>
+        </div>
+        
+        <!-- Боковая панель с популярными новостями -->
+        <div class="sidebar">
+            <h3>Популярные новости</h3>
+            <div id="popular-news">
+                <!-- Популярные новости будут загружены через JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Подвал сайта -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>О нас</h3>
+                    <p>NewsFlow - это современный новостной портал, предоставляющий актуальную информацию о политике, финансах и экономике из проверенных источников.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Категории</h3>
+                    <ul>
+                        <li><a href="#">Политика</a></li>
+                        <li><a href="#">Финансы</a></li>
+                        <li><a href="#">Экономика</a></li>
+                        <li><a href="#">Бизнес</a></li>
+                        <li><a href="#">Технологии</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Контакты</h3>
+                    <ul>
+                        <li><a href="#">Редакция</a></li>
+                        <li><a href="#">Реклама</a></li>
+                        <li><a href="#">Обратная связь</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 NewsFlow. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Модальное окно для новости -->
+    <div class="modal" id="news-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-header">
+                <span class="news-tag" id="modal-category">Политика</span>
+                <span class="news-date" id="modal-date">19 октября 2023, 10:45</span>
+                <h2 id="modal-title">Саммит G20: мировые лидеры договорились о новых санкциях и сотрудничестве</h2>
+                <div class="news-source" id="modal-source">Источник: RBC.ru</div>
+            </div>
+            <div class="modal-body">
+                <img src="https://source.unsplash.com/random/1200x600/?politics,government" alt="Детальное изображение новости" id="modal-image">
+                <div id="modal-content">
+                    <!-- Контент новости будет загружен через JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Уведомление -->
+    <div class="notification" id="notification">
+        Новости успешно загружены!
+    </div>
+
+    <script>
+        // Инициализация Firebase
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        
+        // Инициализируем Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        
+        // Данные новостей
+        let newsData = [];
+
+        // Функция для загрузки новостей из Firebase
+        async function fetchNewsFromFirebase() {
+            // Показываем лоадер
+            document.getElementById('news-loader').style.display = 'block';
+            document.getElementById('news-container').innerHTML = '';
+            
+            try {
+                // Загружаем новости из Firebase
+                const snapshot = await db.collection('news')
+                    .orderBy('createdAt', 'desc')
+                    .get();
+                
+                newsData = [];
+                snapshot.forEach(doc => {
+                    const newsItem = doc.data();
+                    newsItem.id = doc.id;
+                    newsData.push(newsItem);
+                });
+                
+                // Скрываем лоадер
+                document.getElementById('news-loader').style.display = 'none';
+                
+                // Отображаем новости
+                renderNews(newsData);
+                renderPopularNews();
+                
+                // Показываем уведомление
+                showNotification('Новости успешно загружены!');
+            } catch (error) {
+                console.error('Ошибка загрузки новостей:', error);
+                document.getElementById('news-loader').style.display = 'none';
+                document.getElementById('news-container').innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #ccc; margin-bottom: 15px;"></i>
+                        <h3>Не удалось загрузить новости</h3>
+                        <p>Попробуйте обновить страницу позже</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Функция отображения новостей
+        function renderNews(newsArray) {
+            const newsContainer = document.getElementById('news-container');
+            newsContainer.innerHTML = '';
+            
+            if (newsArray.length === 0) {
+                newsContainer.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                        <i class="fas fa-newspaper" style="font-size: 48px; color: #ccc; margin-bottom: 15px;"></i>
+                        <h3>Новостей пока нет</h3>
+                        <p>Скоро здесь появятся свежие новости</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            newsArray.forEach(news => {
+                const tagClass = `tag-${news.category}`;
+                
+                const newsElement = document.createElement('div');
+                newsElement.className = 'news-card';
+                newsElement.setAttribute('data-id', news.id);
+                
+                // Если изображение не указано, используем заглушку
+                const imageUrl = news.image || 'https://source.unsplash.com/random/600x400/?news';
+                
+                newsElement.innerHTML = `
+                    <img src="${imageUrl}" alt="${news.title}">
+                    <div class="news-card-content">
+                        <span class="news-tag ${tagClass}">${getCategoryName(news.category)}</span>
+                        <span class="news-date">${news.date}</span>
+                        <h3>${news.title}</h3>
+                        <div class="news-source source-${news.source.toLowerCase().split('.')[0]}">Источник: ${news.source}</div>
+                    </div>
+                `;
+                
+                newsContainer.appendChild(newsElement);
+            });
+            
+            // Добавляем обработчики событий для новостных карточек
+            document.querySelectorAll('.news-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const newsId = this.getAttribute('data-id');
+                    showNewsModal(newsId);
+                });
+            });
+        }
+        
+        // Функция отображения популярных новостей
+        function renderPopularNews() {
+            const popularContainer = document.getElementById('popular-news');
+            popularContainer.innerHTML = '';
+            
+            if (newsData.length === 0) {
+                popularContainer.innerHTML = '<p>Популярных новостей пока нет</p>';
+                return;
+            }
+            
+            // Берем первые 3 новости как популярные
+            const popularNews = newsData.slice(0, 3);
+            
+            popularNews.forEach(news => {
+                const popularItem = document.createElement('div');
+                popularItem.className = 'popular-news-item';
+                popularItem.setAttribute('data-id', news.id);
+                
+                // Если изображение не указано, используем заглушку
+                const imageUrl = news.image || 'https://source.unsplash.com/random/200x150/?news';
+                
+                popularItem.innerHTML = `
+                    <img src="${imageUrl}" alt="${news.title}">
+                    <div class="popular-news-content">
+                        <h4>${news.title}</h4>
+                        <span class="news-date">${news.date}</span>
+                    </div>
+                `;
+                
+                popularContainer.appendChild(popularItem);
+            });
+            
+            // Добавляем обработчики событий для популярных новостей
+            document.querySelectorAll('.popular-news-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const newsId = this.getAttribute('data-id');
+                    showNewsModal(newsId);
+                });
+            });
+        }
+        
+        // Функция отображения модального окна с новостью
+        function showNewsModal(newsId) {
+            const news = newsData.find(item => item.id == newsId);
+            if (news) {
+                const tagClass = `tag-${news.category}`;
+                
+                // Если изображение не указано, используем заглушку
+                const imageUrl = news.image || 'https://source.unsplash.com/random/1200x600/?news';
+                
+                document.getElementById('modal-category').textContent = getCategoryName(news.category);
+                document.getElementById('modal-category').className = `news-tag ${tagClass}`;
+                document.getElementById('modal-date').textContent = news.date;
+                document.getElementById('modal-title').textContent = news.title;
+                document.getElementById('modal-source').textContent = `Источник: ${news.source}`;
+                document.getElementById('modal-source').className = `news-source source-${news.source.toLowerCase().split('.')[0]}`;
+                document.getElementById('modal-image').src = imageUrl;
+                document.getElementById('modal-content').innerHTML = news.content;
+                
+                document.getElementById('news-modal').style.display = 'block';
+            }
+        }
+        
+        // Функция получения русского названия категории
+        function getCategoryName(category) {
+            const categories = {
+                'politics': 'Политика',
+                'finance': 'Финансы',
+                'economy': 'Экономика',
+                'business': 'Бизнес'
+            };
+            
+            return categories[category] || category;
+        }
+        
+        // Функция показа уведомления
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Функция поиска новостей
+        function searchNews(query) {
+            if (!query.trim()) {
+                renderNews(newsData);
+                return;
+            }
+            
+            const filteredNews = newsData.filter(news => 
+                news.title.toLowerCase().includes(query.toLowerCase()) || 
+                news.content.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            if (filteredNews.length === 0) {
+                document.getElementById('news-container').innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                        <i class="fas fa-search" style="font-size: 48px; color: #ccc; margin-bottom: 15px;"></i>
+                        <h3>Ничего не найдено</h3>
+                        <p>Попробуйте изменить поисковый запрос</p>
+                    </div>
+                `;
+            } else {
+                renderNews(filteredNews);
+            }
+        }
+        
+        // Функция фильтрации новостей по категории
+        function filterNewsByCategory(category) {
+            if (category === 'all') {
+                renderNews(newsData);
+                return;
+            }
+            
+            const filteredNews = newsData.filter(news => news.category === category);
+            renderNews(filteredNews);
+        }
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Установка текущей даты
+            const now = new Date();
+            const options = { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('ru-RU', options);
+            
+            // Загрузка новостей
+            fetchNewsFromFirebase();
+            
+            // Обработчик для поиска
+            document.getElementById('search-button').addEventListener('click', function() {
+                const query = document.getElementById('search-input').value;
+                searchNews(query);
+            });
+            
+            document.getElementById('search-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const query = document.getElementById('search-input').value;
+                    searchNews(query);
+                }
+            });
+            
+            // Обработчики для навигационного меню
+            document.querySelectorAll('nav.main-nav a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelectorAll('nav.main-nav a').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const category = this.getAttribute('data-category');
+                    filterNewsByCategory(category);
+                });
+            });
+            
+            // Обработчик для главной новости
+            document.querySelector('.main-news').addEventListener('click', function() {
+                const newsId = this.getAttribute('data-id');
+                showNewsModal(newsId);
+            });
+            
+            // Закрытие модального окна
+            document.querySelector('.close-modal').addEventListener('click', function() {
+                document.getElementById('news-modal').style.display = 'none';
+            });
+            
+            // Закрытие модального окна при клике вне его
+            window.addEventListener('click', function(event) {
+                if (event.target == document.getElementById('news-modal')) {
+                    document.getElementById('news-modal').style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
